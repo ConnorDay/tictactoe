@@ -9,12 +9,14 @@ services:
         - action: rebuild
           path: ./back/src
           target: /app
+    volumes:
+      - ./back/logs/:/app/logs
   front:
     build: ./front
     command: npm run dev
     develop:
       watch:
-        - action: sync
+        - action: rebuild
           path: ./front/app
           target: /app
           ignore:

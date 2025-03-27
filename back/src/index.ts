@@ -1,13 +1,23 @@
 import express from "express";
-import http from "http";
 import expressWs from "express-ws";
+import manager from "./game/manager";
+import { Game } from "./game/game";
 
 const app = express();
 expressWs(app);
 
 const router = express.Router()
 
+Game.logger.info("test");
+
 router.ws('/', (ws, req) => {
+    manager.createGame();
+    if (req.query.test !== 'thing') {
+        console.log("NOT ALLOWED");
+        ws.close();
+        return;
+    }
+
     ws.on('message', (message: any) => {
         console.log(message)
     });

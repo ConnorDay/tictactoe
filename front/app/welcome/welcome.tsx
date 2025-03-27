@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
 import axios from "axios";
@@ -6,15 +7,15 @@ import axios from "axios";
 export function Welcome() {
     const [foo, setFoo] = useState("loading");
     useEffect(() => {
-        axios.get("/api/").then((response) => {
-            setFoo(response.data.foo);
-        });
-
-        const socket = new WebSocket("ws://localhost:8000/ws");
+        const socket = new WebSocket("ws://localhost:8000/ws?test=nope");
+        console.log("test");
         socket.addEventListener('open', () => {
             socket.send("fegli");
-        })
-    }, [])
+        });
+    }, []);
 
-    return <p>{foo}</p>
+    return <div className="flex gap-4">
+        <Link to={{pathname: "/create"}}>Create</Link>
+        <Link to={{pathname: "/join"}}>Join</Link>
+    </div>
 }
