@@ -1,38 +1,15 @@
-import express from "express";
-import expressWs from "express-ws";
-import manager from "./game/manager";
-import { Game } from "./game/game";
+import app from "./app";
+import createLogger from "./logger";
+import ws_router from "./routes/websocket";
 
-const app = express();
-expressWs(app);
-
-const router = express.Router()
-
-Game.logger.info("test");
-
-router.ws('/', (ws, req) => {
-    manager.createGame();
-    if (req.query.test !== 'thing') {
-        console.log("NOT ALLOWED");
-        ws.close();
-        return;
-    }
-
-    ws.on('message', (message: any) => {
-        console.log(message)
-    });
-
-    ws.on('close', () => {
-        console.log("closed :(");
-    });
-});
-
-app.use("/ws/", router);
+const logger = createLogger("Main Express App");
 
 app.use((req, res, next) => {
-    console.log("got a request", req.url);
+    logger.http("got a request", { request: req})
     next();
 })
+
+app.use("/ws/", ws_router);
 
 app.get("/", (req, res) => {
     res.json({

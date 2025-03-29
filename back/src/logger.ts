@@ -5,7 +5,7 @@ const start_time = Date.now();
 
 export default function(label: string){
     return winston.createLogger({
-        level: 'info',
+        level: 'http',
         format: combine(
             errors({stack: true}), 
             timestamp(), 
@@ -13,10 +13,14 @@ export default function(label: string){
         ),
         defaultMeta: { "class": label },
         transports: [
-            new winston.transports.Console(),
+            new winston.transports.Console({level: "info"}),
             new winston.transports.File({
-                filename: `logs/${start_time}.log`
-            })
+                filename: `logs/${start_time}.all.log`
+            }),
+            new winston.transports.File({
+                filename: `logs/${start_time}.log`,
+                level: "info"
+            }),
         ]
     });
 };
